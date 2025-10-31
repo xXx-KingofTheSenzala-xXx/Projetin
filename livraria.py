@@ -261,36 +261,48 @@ def DevolverLivroNaLivraria( ):
 while True:
     print( pf.figlet_format( "livraria do leo" ) )
     print( "1.adicionar livro                  2.remover livro\n3.emprestimo de livro              4.devolver\n\n\n" )
-    escolha = int( input( "" ) )
-
-    # Adicionar livro
-    if escolha == 1:
-        LimparConsole( )
-        AdicionarLivroNaLivraria( )
-
-    # Remover livro    
-    elif escolha == 2:
-        LimparConsole( )
-        RemoverLivroNaLivraria( )
-
-    # emprestar livro    
-    elif escolha == 3:
-        LimparConsole( )
-        EmprestarLivroNaLivraria( )
-
-    # devolver livro    
-    elif escolha == 4:
-        LimparConsole( )
-        DevolverLivroNaLivraria( )
-
-    elif escolha == 0:
-        break
     
-    else:
-        print("numero invalido")
-        tm.sleep(2)
-        continue
-    
+    try:
+        # Salve a escolha do usuario.
+        iEscolha = int( input( "" ) )
+
+        match iEscolha:
+            # Sair do Script.
+            case 0:
+                break
+
+            # Adicionar livro na livraria.
+            case 1:
+                LimparConsole( )
+                AdicionarLivroNaLivraria( )
+
+            # Remover livro na livraria.
+            case 2:
+                LimparConsole( )
+                RemoverLivroNaLivraria( )
+
+            # Emprestar livro na livraria.
+            case 3:
+                LimparConsole( )
+                EmprestarLivroNaLivraria( )
+
+            # Devolver livro na livraria.
+            case 4:
+                LimparConsole( )
+                DevolverLivroNaLivraria( )
+            
+            # Caso se o numero nao for nenhum dos anteriores.
+            case _:
+                # braia: por o default: do python e case _ que porra e essa.
+                print( "Numero invalido tente novamente" )
+                tm.sleep( 2 )
+
+    except Exception as e:
+        if KeyboardInterrupt == e:
+            break
+
+        print( "Digite um numero por favor" )
+
 
 
 
