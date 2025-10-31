@@ -21,28 +21,45 @@ def tempo():
     horas1 = horas.strftime("%H:%M")
     return(f"Data:{agora}\nHoras:{horas1}")
 
-lLivraria = []
+def MostrarLivrosNaLivraria( Livraria: list ):
+    iTamanhoDaLivraria = len( Livraria )
+    if iTamanhoDaLivraria <= 0:
+        pass
+        
+    # Vamos percorrer a lista agora se ela nao esta vazia.
+    for i in range(iTamanhoDaLivraria):
+
+        # Pegue a classe dentro da lista.
+        LivroAtual: Livro = Livraria[i]
+
+        # Pegue o indice do loop e o livro que o corresponde.
+        strDisplayDoLivro: str = f"{ i } - { LivroAtual.strNomeDoLivro }"
+            
+        # Mostre.
+        print( strDisplayDoLivro )
+
+lLivraria: list = []
 
 class Livro:
     def __init__( self, NomeDoLivro, DataLancada, Genero ):
-        self.strNomeDoLivro = NomeDoLivro
-        self.strDataLancada = DataLancada
-        self.strGenero = Genero
-        self.bEmprestado = False
-        self.strQuemAdquiriu = ""
+        self.strNomeDoLivro: str = NomeDoLivro
+        self.strDataLancada: str = DataLancada
+        self.strGenero: str = Genero
+        self.bEmprestado: bool = False
+        self.strQuemAdquiriu: str = ""
 
     def Emprestar( self, NomeDeQuemAdquiriu ):
         if not self.bEmprestado:
-            self.strQuemAdquiriu = NomeDeQuemAdquiriu
-            self.bEmprestado = True
+            self.strQuemAdquiriu: str = NomeDeQuemAdquiriu
+            self.bEmprestado: bool = True
         else:
             # Debug
             print( "Esse livro ja foi emprestado" )
 
     def Devolver( self ):
         if self.bEmprestado:
-            self.strQuemAdquiriu = ""
-            self.bEmprestado = False
+            self.strQuemAdquiriu: str = ""
+            self.bEmprestado: bool = False
         else:
             # Debug
             print( "Esse livro ja foi devolvido" ) 
@@ -65,31 +82,22 @@ def AdicionarLivroNaLivraria( ):
 
 def RemoverLivroNaLivraria( ):
     print(pf.figlet_format("remover livro"))
-    if i in len(lLivraria) > 0:
-        for i in range(len(lLivraria)):
-            LivroAtual: Livro = lLivraria[i]
-            removerlivro = LivroAtual.pop([ii])
-            strDisplayDoLivro = i + " - " + LivroAtual.strNomeDoLivro
-            print( strDisplayDoLivro )
+    # braia: Murilo arruma isso broski.
+    #if i in len(lLivraria) > 0:
+    #    for i in range(len(lLivraria)):
+    #        LivroAtual: Livro = lLivraria[i]
+    #        removerlivro = LivroAtual.pop([ii])
+    #        strDisplayDoLivro = i + " - " + LivroAtual.strNomeDoLivro
+    #        print( strDisplayDoLivro )
             
 
 def EmprestarLivroNaLivraria( ):
     print(pf.figlet_format("Emprestar livro"))
     
-    # Check para ver se a lista nao esta vazia.
-    if len(lLivraria) > 0:
-        
-        # Vamos percorrer a lista agora se ela nao esta vazia.
-        for i in range(len(lLivraria)):
+    # Mostre os livros que tem na livraria.
+    MostrarLivrosNaLivraria( lLivraria )
 
-            # Pegue a classe dentro da lista.
-            LivroAtual: Livro = lLivraria[i]
-
-            # Pegue o indice do loop e o livro que o corresponde.
-            strDisplayDoLivro = i + " - " + LivroAtual.strNomeDoLivro
-            
-            # Mostre.
-            print( strDisplayDoLivro )
+    # E so pra pausar lel.
     input()
     
 #     Agora a parte do emprestimo
