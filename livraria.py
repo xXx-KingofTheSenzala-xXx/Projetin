@@ -8,6 +8,9 @@
 # variavel constante ou seja nao pode alterar o valor NOMEDAVARIAVEL
 # variavel bool ou seja nao pode alterar o valor bNomeDaVariavel
 
+# Para fazer;
+# braia: mano bora por essa porra pra exportar e importar a variavel Livraria.
+
 # bibliotecas importadas
 import pyfiglet as pf
 import numpy as np
@@ -92,7 +95,7 @@ def AdicionarLivroNaLivraria( ):
     strNomeDoLivro = input( "Diga o nome do livro: " )
     strDataLancada = tempo( )
     strGenero = input( "Diga o genero do livro: " )
-    print(f"Nome do livro: {strNomeDoLivro}")
+    print( f"Nome do livro: { strNomeDoLivro }" )
 
     # adiciona as informacoes a classe.
     NovoLivro = Livro( strNomeDoLivro, strDataLancada, strGenero )
@@ -101,18 +104,41 @@ def AdicionarLivroNaLivraria( ):
     lLivraria.append( NovoLivro )
 
     # Debug.
-    print("Adicionar livro pronto!")
+    print( "Adicionar livro pronto!" )
 
 def RemoverLivroNaLivraria( ):
-    print(pf.figlet_format("remover livro"))
-    # braia: Murilo arruma isso broski.
-    #if i in len(lLivraria) > 0:
-    #    for i in range(len(lLivraria)):
-    #        LivroAtual: Livro = lLivraria[i]
-    #        removerlivro = LivroAtual.pop([ii])
-    #        strDisplayDoLivro = i + " - " + LivroAtual.strNomeDoLivro
-    #        print( strDisplayDoLivro )
+    print( pf.figlet_format( "remover livro" ) )
+
+    # Mostrar os livros que tem ai no role.
+    MostrarLivrosNaLivraria( lLivraria )
+
+    # Porra se a lista ta vazia nao faz nada.
+    if len(lLivraria) <= 0:
+        print( "Nao tem nenhum livro para ocorrer a remocao" )
+        pass
+
+    while True:
+        try:
+            # Salve a escolha do usuario.
+            iEscolha = int( input( "Diga o indice do livro a ser removido do catalogo\n" ) )
+
+            # Check para evitar indices invalidos.
+            if iEscolha < 0 or iEscolha > len( lLivraria ):
+                print( "Por favor coloque um dos indices listado" )
+                continue
             
+            # Remova o livro.
+            lLivraria.pop( iEscolha )
+
+            # Ja atingimos nosso objetivo pare o loop.
+            break
+        
+        except Exception as e:
+            # Pare o loop caso seja solicitado um interrupt ( CTRL + C ).
+            if KeyboardInterrupt == e:
+                break
+
+            print("Por favor coloque um numero")         
 
 def EmprestarLivroNaLivraria( ):
     print(pf.figlet_format("Emprestar livro"))
@@ -134,6 +160,11 @@ def EmprestarLivroNaLivraria( ):
             if iEscolha == -1:
                 break
             
+            # Check para evitar indices invalidos.
+            if iEscolha < 0 or iEscolha > len( lLivraria ):
+                print( "Por favor coloque um dos indices listado" )
+                continue
+
             # Verifique se esse livro ja foi emprestado nao rode o codigo de emprestamento.
             if lLivraria[ iEscolha ].bEmprestado:
                 print( f"Este livro ja foi empretado para: { lLivraria[ iEscolha ].strQuemAdquiriu }" )
@@ -153,10 +184,6 @@ def EmprestarLivroNaLivraria( ):
             if KeyboardInterrupt == e:
                 break
             
-            # Caso o numero da escolha nao esteja na lista.
-            if IndexError == e:
-                print( "Por favor digite um numero que esteja na lista" )
-
             # Se acontecer outra coisa.
             else:
                 print("Por favor digite um numero")
@@ -181,6 +208,11 @@ def DevolverLivroNaLivraria( ):
             if iEscolha == -1:
                 break
             
+            # Check para evitar indices invalidos.
+            if iEscolha < 0 or iEscolha > len( lLivraria ):
+                print( "Por favor coloque um dos indices listado" )
+                continue
+
             # Verifique se esse livro nao foi emprestado se nao foi nao rode o resto.
             if not lLivraria[ iEscolha ].bEmprestado:
                 print( f"Este livro ja esse livro nao foi emprestado" )
@@ -205,18 +237,14 @@ def DevolverLivroNaLivraria( ):
             if KeyboardInterrupt == e:
                 break
             
-            # Caso o numero da escolha nao esteja na lista.
-            if IndexError == e:
-                print( "Por favor digite um numero que esteja na lista" )
-
             # Se acontecer outra coisa.
             else:
                 print("Por favor digite um numero")
 
 while True:
-    print(pf.figlet_format("livraria do leo"))
-    print("1.adicionar livro                  2.remover livro\n3.emprestimo de livro              4.devolver\n\n\n")
-    escolha = int(input(""))
+    print( pf.figlet_format( "livraria do leo" ) )
+    print( "1.adicionar livro                  2.remover livro\n3.emprestimo de livro              4.devolver\n\n\n" )
+    escolha = int( input( "" ) )
 
     # Adicionar livro
     if escolha == 1:
