@@ -41,6 +41,18 @@ def MostrarLivrosNaLivraria( Livraria: list ):
         # Mostre.
         print( strDisplayDoLivro )
 
+def LimparConsole( ):
+    # braia: Para que isso?
+    # Eu to no linux filho da puta cls nao limpa a porra do console caralho.
+    # se o os.name retornar 'nt' quer dizer que voce ta no windows
+    # caso retorne posix provavelmente voce esta num sistema baseado no linux.
+
+    # Caso esteja no windows.
+    if os.name == "nt":
+        os.system("cls")
+    else
+        os.system("clear")
+
 lLivraria: list = [ ]
 
 class Livro:
@@ -208,22 +220,22 @@ while True:
 
     # Adicionar livro
     if escolha == 1:
-        os.system("cls")
+        LimparConsole( )
         AdicionarLivroNaLivraria()
 
     # Remover livro    
     elif escolha == 2:
-        os.system("cls")
+        LimparConsole( )
         RemoverLivroNaLivraria()
 
     # emprestar livro    
     elif escolha == 3:
-        os.system("cls")
+        LimparConsole( )
         EmprestarLivroNaLivraria()
 
     # devolver livro    
     elif escolha == 4:
-        os.system("cls")
+        LimparConsole( )
         DevolverLivroNaLivraria()
     elif escolha == 0:
         break
