@@ -50,7 +50,7 @@ def LimparConsole( ):
     # Caso esteja no windows.
     if os.name == "nt":
         os.system("cls")
-    else
+    else:
         os.system("clear")
 
 lLivraria: list = [ ]
