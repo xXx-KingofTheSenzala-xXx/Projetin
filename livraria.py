@@ -116,7 +116,11 @@ def EmprestarLivroNaLivraria( ):
         # o script nao crashar.
         try:
             # Salve a escolha do usuario.
-            iEscolha = int( input( "Escolha o indice do livro que deseja pegar emprestado \n" ) )
+            iEscolha = int( input( "Escolha o indice do livro que deseja pegar emprestado ou digite -1 para sair \n" ) )
+            
+            # Nosso usuario deseja sair.
+            if iEscolha == -1:
+                break
             
             # Verifique se esse livro ja foi emprestado nao rode o codigo de emprestamento.
             if lLivraria[ iEscolha ].bEmprestado:
@@ -159,7 +163,11 @@ def DevolverLivroNaLivraria( ):
         # o script nao crashar.
         try:
             # Salve a escolha do usuario.
-            iEscolha = int( input( "Escolha o indice do livro que deseja devolver \n" ) )
+            iEscolha = int( input( "Escolha o indice do livro que deseja devolver ou digite -1 para sair\n" ) )
+
+            # Nosso usuario deseja sair.
+            if iEscolha == -1:
+                break
             
             # Verifique se esse livro nao foi emprestado se nao foi nao rode o resto.
             if not lLivraria[ iEscolha ].bEmprestado:
@@ -169,6 +177,7 @@ def DevolverLivroNaLivraria( ):
             # Salve o usuario que talvez tinha pego o livro.
             strNomeDeQuemTalvezTenhaPegadoEmprestado = input( "Digite o nome de quem vai devolver o livro \n" )
             
+            # Verifique se foi esse usuario que pegou emprestado.
             if strNomeDeQuemTalvezTenhaPegadoEmprestado != lLivraria[ iEscolha ].strQuemAdquiriu:
                 print( "Esse usuario nao pegou o livro" )
                 continue
