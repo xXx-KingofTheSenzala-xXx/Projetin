@@ -19,7 +19,7 @@ def tempo():
     agora = dt.date.today()
     horas = dt.datetime.now().time()
     horas1 = horas.strftime("%H:%M")
-    return(f"Data:{agora}\nHoras:{horas1}")
+    return f"as:{horas1} do dia: {agora}"
 
 def MostrarLivrosNaLivraria( Livraria: list ):
     iTamanhoDaLivraria = len( Livraria )
@@ -27,18 +27,21 @@ def MostrarLivrosNaLivraria( Livraria: list ):
         pass
         
     # Vamos percorrer a lista agora se ela nao esta vazia.
-    for i in range(iTamanhoDaLivraria):
+    for i in range( iTamanhoDaLivraria ):
 
         # Pegue a classe dentro da lista.
-        LivroAtual: Livro = Livraria[i]
+        LivroAtual: Livro = Livraria[ i ]
 
         # Pegue o indice do loop e o livro que o corresponde.
         strDisplayDoLivro: str = f"{ i } - { LivroAtual.strNomeDoLivro }"
+
+        if LivroAtual.bEmprestado:
+            strDisplayDoLivro += f" - Emprestado para: { LivroAtual.strQuemAdquiriu } { LivroAtual.strDataLancada }"
             
         # Mostre.
         print( strDisplayDoLivro )
 
-lLivraria: list = []
+lLivraria: list = [ ]
 
 class Livro:
     def __init__( self, NomeDoLivro, DataLancada, Genero ):
@@ -48,21 +51,29 @@ class Livro:
         self.bEmprestado: bool = False
         self.strQuemAdquiriu: str = ""
 
-    def Emprestar( self, NomeDeQuemAdquiriu ):
+    def Emprestar( self, NomeDeQuemAdquiriu: str ):
         if not self.bEmprestado:
             self.strQuemAdquiriu: str = NomeDeQuemAdquiriu
             self.bEmprestado: bool = True
-        else:
-            # Debug
-            print( "Esse livro ja foi emprestado" )
+            return True
 
-    def Devolver( self ):
-        if self.bEmprestado:
+        # Debug
+        print( "Esse livro ja foi emprestado" )
+        return False
+
+    def Devolver( self, NomeDeQuemAdquiriu: str ):
+        if self.bEmprestado and self.strQuemAdquiriu == NomeDeQuemAdquiriu:
             self.strQuemAdquiriu: str = ""
             self.bEmprestado: bool = False
-        else:
-            # Debug
-            print( "Esse livro ja foi devolvido" ) 
+            return True
+
+        elif self.strQuemAdquiriu != NomeDeQuemAdquiriu:
+            print("Nao foi esse usuario que pegou emprestado")
+            return False
+
+        # Debug
+        print( "Esse livro ja foi devolvido" )
+        return False
 
 def AdicionarLivroNaLivraria( ):
     print( pf.figlet_format( "Adicionar livro" ) )
@@ -97,17 +108,89 @@ def EmprestarLivroNaLivraria( ):
     # Mostre os livros que tem na livraria.
     MostrarLivrosNaLivraria( lLivraria )
 
-    # E so pra pausar lel.
-    input()
-    
-#     Agora a parte do emprestimo
-#     try:
-#         iIndiceDaLista = int
-# n
-#     except:
+    # Parte do emprestimo.
+    while True:
+
+        # braia: Por que try?
+        # Bom isso e para se o usuario por qualquer coisa exceto numero que tenha no range da lista
+        # o script nao crashar.
+        try:
+            # Salve a escolha do usuario.
+            iEscolha = int( input( "Escolha o indice do livro que deseja pegar emprestado \n" ) )
+            
+            # Verifique se esse livro ja foi emprestado nao rode o codigo de emprestamento.
+            if lLivraria[ iEscolha ].bEmprestado:
+                print( f"Este livro ja foi empretado para: { lLivraria[ iEscolha ].strQuemAdquiriu }" )
+                continue
+            
+            # Salve o usuario que vai pegar emprestado o livro.
+            strNomeDeQuemVaiPegarEmprestado = input( "Digite o nome de quem vai pegar emprestado \n" )
+            
+            # Rode a funcao dur.
+            lLivraria[ iEscolha ].Emprestar( strNomeDeQuemVaiPegarEmprestado )
+            
+            # Pare o loop ja atingimos nosso objeto.
+            break
+
+        except Exception as e:
+            # Pare o loop caso seja solicitado um interrupt ( CTRL + C ).
+            if KeyboardInterrupt == e:
+                break
+            
+            # Caso o numero da escolha nao esteja na lista.
+            if IndexError == e:
+                print( "Por favor digite um numero que esteja na lista" )
+
+            # Se acontecer outra coisa.
+            else:
+                print("Por favor digite um numero")
 
 def DevolverLivroNaLivraria( ):
-   print(pf.figlet_format("Devolver livro"))
+    print(pf.figlet_format( "Devolver livro" ) )
+
+    # Mostre os livros que tem na livraria.
+    MostrarLivrosNaLivraria( lLivraria )
+
+    # Parte da devolucao.
+    while True:
+
+        # braia: Por que try?
+        # Bom isso e para se o usuario por qualquer coisa exceto numero que tenha no range da lista
+        # o script nao crashar.
+        try:
+            # Salve a escolha do usuario.
+            iEscolha = int( input( "Escolha o indice do livro que deseja devolver \n" ) )
+            
+            # Verifique se esse livro nao foi emprestado se nao foi nao rode o resto.
+            if not lLivraria[ iEscolha ].bEmprestado:
+                print( f"Este livro ja esse livro nao foi emprestado" )
+                continue
+            
+            # Salve o usuario que talvez tinha pego o livro.
+            strNomeDeQuemTalvezTenhaPegadoEmprestado = input( "Digite o nome de quem vai devolver o livro \n" )
+            
+            if strNomeDeQuemTalvezTenhaPegadoEmprestado != lLivraria[ iEscolha ].strQuemAdquiriu:
+                print( "Esse usuario nao pegou o livro" )
+                continue
+
+            # Rode a funcao dur.
+            lLivraria[ iEscolha ].Devolver( strNomeDeQuemTalvezTenhaPegadoEmprestado )
+            
+            # Pare o loop ja atingimos nosso objeto.
+            break
+
+        except Exception as e:
+            # Pare o loop caso seja solicitado um interrupt ( CTRL + C ).
+            if KeyboardInterrupt == e:
+                break
+            
+            # Caso o numero da escolha nao esteja na lista.
+            if IndexError == e:
+                print( "Por favor digite um numero que esteja na lista" )
+
+            # Se acontecer outra coisa.
+            else:
+                print("Por favor digite um numero")
 
 while True:
     print(pf.figlet_format("livraria do leo"))
