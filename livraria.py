@@ -1,4 +1,4 @@
-#   Objetivos - criar um sistema de livraria que tenha entrada de livros, remocao, emprestivo e devolucao.
+# Objetivos - criar um sistema de livraria que tenha entrada de livros, remocao, emprestivo e devolucao.
 # Formatacao: por obsequio para padronizar as variaveis quando for
 # variavel int iNomeDaVariavel
 # variavel float flNomeDaVariavel
@@ -112,9 +112,12 @@ def RemoverLivroNaLivraria( ):
     # Mostrar os livros que tem ai no role.
     MostrarLivrosNaLivraria( lLivraria )
 
-    # Porra se a lista ta vazia nao faz nada.
-    if len(lLivraria) <= 0:
-        print( "Nao tem nenhum livro para ocorrer a remocao" )
+    # Pegue o tamanho da lista
+    iTamanhoDaLivraria = len( lLivraria )
+
+    # A lista ta vazia os codigos abaixo serao inuteis.
+    if iTamanhoDaLivraria <= 0:
+        print( "A livraria ta vazia, por favor adicione algum livro" )
         pass
 
     while True:
@@ -123,7 +126,7 @@ def RemoverLivroNaLivraria( ):
             iEscolha = int( input( "Diga o indice do livro a ser removido do catalogo\n" ) )
 
             # Check para evitar indices invalidos.
-            if iEscolha < 0 or iEscolha > len( lLivraria ):
+            if iEscolha < 0 or iEscolha > iTamanhoDaLivraria:
                 print( "Por favor coloque um dos indices listado" )
                 continue
             
@@ -146,6 +149,14 @@ def EmprestarLivroNaLivraria( ):
     # Mostre os livros que tem na livraria.
     MostrarLivrosNaLivraria( lLivraria )
 
+    # Pegue o tamanho da lista
+    iTamanhoDaLivraria = len( lLivraria )
+
+    # A lista ta vazia os codigos abaixo serao inuteis.
+    if iTamanhoDaLivraria <= 0:
+        print( "A livraria ta vazia, por favor adicione algum livro" )
+        pass
+
     # Parte do emprestimo.
     while True:
 
@@ -161,7 +172,7 @@ def EmprestarLivroNaLivraria( ):
                 break
             
             # Check para evitar indices invalidos.
-            if iEscolha < 0 or iEscolha > len( lLivraria ):
+            if iEscolha < 0 or iEscolha > iTamanhoDaLivraria:
                 print( "Por favor coloque um dos indices listado" )
                 continue
 
@@ -185,14 +196,21 @@ def EmprestarLivroNaLivraria( ):
                 break
             
             # Se acontecer outra coisa.
-            else:
-                print("Por favor digite um numero")
+            print("Por favor digite um numero")
 
 def DevolverLivroNaLivraria( ):
     print(pf.figlet_format( "Devolver livro" ) )
 
     # Mostre os livros que tem na livraria.
     MostrarLivrosNaLivraria( lLivraria )
+
+    # Pegue o tamanho da lista
+    iTamanhoDaLivraria = len( lLivraria )
+
+    # A lista ta vazia os codigos abaixo serao inuteis.
+    if iTamanhoDaLivraria <= 0:
+        print( "A livraria ta vazia, por favor adicione algum livro" )
+        pass
 
     # Parte da devolucao.
     while True:
@@ -209,7 +227,7 @@ def DevolverLivroNaLivraria( ):
                 break
             
             # Check para evitar indices invalidos.
-            if iEscolha < 0 or iEscolha > len( lLivraria ):
+            if iEscolha < 0 or iEscolha > iTamanhoDaLivraria:
                 print( "Por favor coloque um dos indices listado" )
                 continue
 
@@ -238,8 +256,7 @@ def DevolverLivroNaLivraria( ):
                 break
             
             # Se acontecer outra coisa.
-            else:
-                print("Por favor digite um numero")
+            print("Por favor digite um numero")
 
 while True:
     print( pf.figlet_format( "livraria do leo" ) )
@@ -249,24 +266,26 @@ while True:
     # Adicionar livro
     if escolha == 1:
         LimparConsole( )
-        AdicionarLivroNaLivraria()
+        AdicionarLivroNaLivraria( )
 
     # Remover livro    
     elif escolha == 2:
         LimparConsole( )
-        RemoverLivroNaLivraria()
+        RemoverLivroNaLivraria( )
 
     # emprestar livro    
     elif escolha == 3:
         LimparConsole( )
-        EmprestarLivroNaLivraria()
+        EmprestarLivroNaLivraria( )
 
     # devolver livro    
     elif escolha == 4:
         LimparConsole( )
-        DevolverLivroNaLivraria()
+        DevolverLivroNaLivraria( )
+
     elif escolha == 0:
         break
+    
     else:
         print("numero invalido")
         tm.sleep(2)
