@@ -10,6 +10,14 @@
 
 # Para fazer;
 # braia: mano bora por essa porra pra exportar e importar a variavel Livraria.
+# bom hoje no dia 03/11/2025 tivemos um papo com nosso cliente.
+# sera necessario exportacao para um planilha excel.
+# restricoes de livros por idade
+# restricoes para livros que nao possuem muitas unidades ex:
+# tem 15 livros iguais 3 deles nao podem ser retirados
+# ou tem so um exemplar logo ele nao pode ser emprestado.
+# codigo para cada livro. (feito)
+# por variavel de qual estante e.
 
 # bibliotecas importadas
 import pyfiglet as pf
@@ -17,6 +25,7 @@ import numpy as np
 import os
 import datetime as dt
 import time as tm
+import random
 
 def tempo():
     agora = dt.date.today()
@@ -56,15 +65,52 @@ def LimparConsole( ):
     else:
         os.system("clear")
 
+def GerarCodigoUnico( Livraria: list, nTamanho: int ):
+    while True:
+        # Gere o codigo.
+        strCodigo: str = ''.join( random.choices( "1234567890abcdefghijklmnopqrstuvwxyz", k = nTamanho ) ).upper( )
+        
+        bUnico = True
+
+        # Check para ver se ja tem algo livro com o mesmo codigo.
+        for i in Livraria:
+            LivroAtual: Livro = i
+
+            # Se tiver igual roda tudo de novo.
+            if LivroAtual.strCodigoDoLivro == strCodigo:
+                bUnico = False
+        
+        # Esse codigo e unico nao rode dnv.
+        if bUnico:
+            break
+
+    return strCodigo
+
+def InputDeInteiro( strEntrada: str ):
+    # Para que isso?, para eu poupar tempo lel.
+    iValorDeRetorno = 0
+
+    while True:
+        try:
+            iValorDeRetorno = int( input( strEntrada ) )
+            break
+        except:
+            print("Por favor coloque um numero")
+
+    return iValorDeRetorno
+
 lLivraria: list = [ ]
 
 class Livro:
-    def __init__( self, NomeDoLivro, DataLancada, Genero ):
+    def __init__( self, NomeDoLivro, DataLancada, Genero, IdadeMinima, Restricao ):
         self.strNomeDoLivro: str = NomeDoLivro
         self.strDataLancada: str = DataLancada
         self.strGenero: str = Genero
         self.bEmprestado: bool = False
         self.strQuemAdquiriu: str = ""
+        self.strCodigoDoLivro: str = GerarCodigoUnico( lLivraria, 6 )
+        self.iIdadeMinima: int = IdadeMinima
+        self.strRestricao: str = Restricao
 
     def Emprestar( self, NomeDeQuemAdquiriu: str ):
         if not self.bEmprestado:
@@ -95,10 +141,12 @@ def AdicionarLivroNaLivraria( ):
     strNomeDoLivro = input( "Diga o nome do livro: " )
     strDataLancada = tempo( )
     strGenero = input( "Diga o genero do livro: " )
+    iIdadeMinima = InputDeInteiro( "Diga a idade minima para adquiriu o livro: " )
+    
     print( f"Nome do livro: { strNomeDoLivro }" )
 
     # adiciona as informacoes a classe.
-    NovoLivro = Livro( strNomeDoLivro, strDataLancada, strGenero )
+    NovoLivro = Livro( strNomeDoLivro, strDataLancada, strGenero, iIdadeMinima,  )
 
     # adiciona o livro a lista.
     lLivraria.append( NovoLivro )
