@@ -48,7 +48,7 @@ def MostrarLivrosNaLivraria( Livraria: list ):
         strDisplayDoLivro: str = f"{ i } - { LivroAtual.strNomeDoLivro } - Genero: { LivroAtual.strGenero } - Idade Minima: { LivroAtual.iIdadeMinima } - Marcacao: { LivroAtual.strRestricao } - Prateleira: { LivroAtual.iPrateleira } - Codigo: { LivroAtual.strCodigoDoLivro }"
 
         if LivroAtual.bEmprestado:
-            strDisplayDoLivro += f" - Emprestado para: { LivroAtual.strQuemAdquiriu } { LivroAtual.strDataLancada }"
+            strDisplayDoLivro += f" - Emprestado para: { LivroAtual.strQuemAdquiriu } { LivroAtual.strDataEmprestada }"
 
         # Mostre.
         print( strDisplayDoLivro )
