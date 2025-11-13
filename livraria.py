@@ -401,12 +401,9 @@ def DevolverLivroNaLivraria( ):
         if bPare:
             break
 
-def ExportacaoParaExcel( ):
-    # Cara sinceramente nao sei oq dizer.
-    # Conversao da lista livraria para pandas.
-
+def ConversaoDaListaParaDicionario( Livraria: list ):
     # Pegue o tamanho da lista.
-    iTamanhodaLista = len( lLivraria )
+    iTamanhodaLista = len( Livraria )
 
     # Se a lista estiver vazia nao rode essa porra.
     if iTamanhodaLista <= 0:
@@ -442,7 +439,7 @@ def ExportacaoParaExcel( ):
     for i in range( iTamanhodaLista ):
 
         # Pegue a classe dentro do catalogo.
-        LivroAtual: Livro = lLivraria[ i ]
+        LivroAtual: Livro = Livraria[ i ]
 
         dictLivraria[ lIndicesDoDicionario[ 0 ] ].append( LivroAtual.strNomeDoLivro )
         dictLivraria[ lIndicesDoDicionario[ 1 ] ].append( LivroAtual.strGenero )
@@ -453,6 +450,14 @@ def ExportacaoParaExcel( ):
         dictLivraria[ lIndicesDoDicionario[ 6 ] ].append( LivroAtual.iIdadeMinima )
         dictLivraria[ lIndicesDoDicionario[ 7 ] ].append( LivroAtual.strRestricao )
         dictLivraria[ lIndicesDoDicionario[ 8 ] ].append( LivroAtual.iPrateleira )
+    
+    return dictLivraria
+
+def OperacoesEmExcel( ):
+    # Cara sinceramente nao sei oq dizer.
+    # Conversao da lista livraria para pandas.
+
+    dictLivraria = ConversaoDaListaParaDicionario( lLivraria )
        
     dataframe = pd.DataFrame( dictLivraria )
     print( dataframe )
@@ -499,7 +504,7 @@ while True:
             # Sistema de exportacao.
             case 5:
                 LimparConsole( )
-                ExportacaoParaExcel( )
+                OperacoesEmExcel( )
 
             # Caso se o numero nao for nenhum dos anteriores.
             case _:
