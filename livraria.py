@@ -20,12 +20,18 @@
 # por variavel de qual estante e. ( feito )
 
 # bibliotecas importadas
+import pandas as pd
 import pyfiglet as pf
 import numpy as np
 import os
 import datetime as dt
 import time as tm
 import random
+import colorama as cl
+
+ESTAGIOPADRAO = 0
+ESTAGIOMOSTRARSOMENTEEMPRESTAVEL = 1
+ESTAGIOMOSTRARESCOLHIDO = 2
 
 def tempo():
     agora = dt.date.today()
@@ -33,7 +39,7 @@ def tempo():
     horas1 = horas.strftime("%H:%M")
     return f"as:{horas1} do dia: {agora}"
 
-def MostrarLivrosNaLivraria( Livraria: list ):
+def MostrarLivrosNaLivraria( Livraria: list, Estagio: int = ESTAGIOPADRAO, IndiceDoEscolhido: int = 0 ):
     iTamanhoDaLivraria = len( Livraria )
     if iTamanhoDaLivraria <= 0:
         pass
@@ -44,8 +50,22 @@ def MostrarLivrosNaLivraria( Livraria: list ):
         # Pegue a classe dentro da lista.
         LivroAtual: Livro = Livraria[ i ]
 
+        # Nao mostre os livros nao emprestaveis
+        if Estagio == ESTAGIOMOSTRARSOMENTEEMPRESTAVEL and LivroAtual.strRestricao == "Vermelho":
+            continue
+
+        # Nao mostre aqueles fora do indice
+        if Estagio == ESTAGIOMOSTRARESCOLHIDO and i != IndiceDoEscolhido:
+            continue
+        
+        strEmojiDeCor = ""
+        if LivroAtual.strRestricao == "Verde":
+            strEmojiDeCor = "🟩"
+        elif LivroAtual.strRestricao == "Vermelho":
+            strEmojiDeCor = "🟥"
+            
         # Pegue o indice do loop e o livro que o corresponde.
-        strDisplayDoLivro: str = f"{ i } - { LivroAtual.strNomeDoLivro } - Genero: { LivroAtual.strGenero } - Idade Minima: { LivroAtual.iIdadeMinima } - Marcacao: { LivroAtual.strRestricao } - Prateleira: { LivroAtual.iPrateleira } - Codigo: { LivroAtual.strCodigoDoLivro }"
+        strDisplayDoLivro: str = f"{ i } - { LivroAtual.strNomeDoLivro } \n Genero: { LivroAtual.strGenero } \n Idade Minima: { LivroAtual.iIdadeMinima } \n Marcacao: { strEmojiDeCor } \n Prateleira: { LivroAtual.iPrateleira } \n Codigo: { LivroAtual.strCodigoDoLivro }\n"
 
         if LivroAtual.bEmprestado:
             strDisplayDoLivro += f" - Emprestado para: { LivroAtual.strQuemAdquiriu } { LivroAtual.strDataEmprestada }"
@@ -94,7 +114,10 @@ def InputDeInteiro( strEntrada: str ):
         try:
             iValorDeRetorno = int( input( strEntrada ) )
             break
-        except:
+        except Exception as e:
+            if e == KeyboardInterrupt:
+                break
+
             print( "Por favor coloque um numero" )
 
     return iValorDeRetorno
@@ -106,15 +129,55 @@ def InputDeRestricao( strEntrada: str ):
     strSaida = ""
 
     while True:
+
+        # Pegue qual e a restricao.
         strSaida = input( strEntrada )
-        if strSaida == "vermelho" or strSaida == "Vermelho":
+
+        # Padronize isso.        
+        strSaida = strSaida.capitalize( )
+        
+        if strSaida == "Vermelho":
             break
-        elif strSaida == "verde" or strSaida == "Verde":
+        elif strSaida == "Verde":
             break
         else:
-            print( "Essa palavra nao esta no catalogo de restricao" )
+            print( "Essa palavra não está no catalogo de restrição." )
 
-    return strSaida.capitalize( )
+    return strSaida
+
+def InputDeIdadeMinima( strEntrada: str ):
+    # Inicializa a variavel.
+    iIdadeMinima = ""
+
+    while True:
+        # Input do idade
+        iIdadeMinima = input( strEntrada )
+
+        # Padronizar a variavel.
+        iIdadeMinima = iIdadeMinima.upper( )
+
+        if iIdadeMinima == "L":
+            iIdadeMinima = 0
+            break
+        elif iIdadeMinima == "10":
+            iIdadeMinima = 10
+            break
+        elif iIdadeMinima == "12":
+            iIdadeMinima = 12
+            break
+        elif iIdadeMinima == "14":
+            iIdadeMinima = 14
+            break
+        elif iIdadeMinima == "16":
+            iIdadeMinima = 16
+            break
+        elif iIdadeMinima == "18":
+            iIdadeMinima = 18
+            break
+        else:
+            print("numero invalido")  
+
+    return iIdadeMinima
 
 lLivraria: list = [ ]
 
@@ -138,15 +201,15 @@ class Livro:
             return True
 
         elif IdadeDeQuemAdquiriu < self.iIdadeMinima:
-            print( "A fachetaria desse livro nao e permitido para esse aluno" )
+            print( "A faixa etária desse livro não e permitido para esse aluno." )
             return False
 
-        elif self.strRestricao:
-            print( "Esse livro nao e emprestavel" )
+        elif self.strRestricao == "Vermelho":
+            print( "Esse livro é VERMELHO não pode ser emprestado." )
             return False
 
         # Debug
-        print( "Esse livro ja foi emprestado" )
+        print( "Esse livro ja foi emprestado." )
         return False
 
     def Devolver( self, NomeDeQuemAdquiriu: str ):
@@ -156,20 +219,68 @@ class Livro:
             return True
 
         elif self.strQuemAdquiriu != NomeDeQuemAdquiriu:
-            print( "Nao foi esse usuario que pegou emprestado" )
+            print( "Não foi esse aluno que pegou emprestado." )
             return False
 
         # Debug
-        print( "Esse livro ja foi devolvido" )
+        print( "Esse livro ja foi devolvido." )
         return False
 
 def AdicionarLivroNaLivraria( ):
-    print( pf.figlet_format( "Adicionar livro" ) )
-    strNomeDoLivro = input( "Diga o nome do livro: " )
-    strGenero = input( "Diga o genero do livro: " )
-    iIdadeMinima = InputDeInteiro( "Diga a idade minima para adquirir o livro: " )
-    strRestricao = InputDeRestricao( "Diga qual restricao esse livro possui se e vermelho ou verde: " )
-    iPrateleira = InputDeInteiro( "Diga qual prateleira esse livro pertence: " )
+    bPare = False
+
+    while True:
+        if bPare:
+            break
+
+        print( pf.figlet_format( "Adicionar livro" ) )
+        strNomeDoLivro = input( "Diga o nome do livro: " )
+        LimparConsole()
+        
+        print( pf.figlet_format( "Adicionar livro" ) )
+        print(f"Nome: {strNomeDoLivro}")
+        strGenero = input( "Diga o genero do livro: " )
+        LimparConsole()
+        
+        print( pf.figlet_format( "Adicionar livro" ) )
+        print(f"Nome: {strNomeDoLivro}")
+        print(f"Genero: {strGenero}")
+        iIdadeMinima = InputDeIdadeMinima( "Diga a idade minima para adquirir o livro( L  10   12   14   16   18 ): " )
+        LimparConsole()
+        
+        print( pf.figlet_format( "Adicionar livro" ) )
+        print(f"Nome: {strNomeDoLivro}")
+        print(f"Genero: {strGenero}")
+        print(f"classificação: {iIdadeMinima}")
+        strRestricao = InputDeRestricao( "Diga qual restricao esse livro possui se e vermelho ou verde: " )
+        LimparConsole()
+
+        print( pf.figlet_format( "Adicionar livro" ) )
+        print(f"Nome: {strNomeDoLivro}")
+        print(f"Genero: {strGenero}")
+        print(f"classificação: {iIdadeMinima}")
+        print(f"restrição : {strRestricao}")
+        iPrateleira = InputDeInteiro( "Diga qual prateleira esse livro pertence: " )
+        LimparConsole()
+        
+        print( pf.figlet_format( "Adicionar livro" ) )
+        print(f"Nome: {strNomeDoLivro}")
+        print(f"Genero: {strGenero}")
+        print(f"classificação: {iIdadeMinima}")
+        print(f"restrição : {strRestricao}")
+        print(f"pratileira: {iPrateleira}")
+
+        while True:
+            x = input("\n ta certo?(N/Y)").upper( )
+            if x == ("N"):
+                LimparConsole()
+                break
+            elif x == ("Y"):
+                bPare = True
+                break
+            else:
+                print("Opções invalida")
+                continue
 
     # adiciona as informacoes a classe.
     NovoLivro = Livro( strNomeDoLivro, strGenero, iIdadeMinima, strRestricao, iPrateleira )
@@ -188,44 +299,32 @@ def RemoverLivroNaLivraria( ):
 
     # A lista ta vazia os codigos abaixo serao inuteis.
     if iTamanhoDaLivraria <= 0:
-        print( "A livraria ta vazia, por favor adicione algum livro" )
+        print( "A livraria ta vazia, por favor adicione algum livro." )
         pass
 
-    while True:
-        try:
-            # Salve a escolha do usuario.
-            iEscolha = int( input( "Diga o indice do livro a ser removido do catalogo\n" ) )
+    # Salve a escolha do usuario.
+    iEscolha = InputDeInteiro( "Diga o numero do livro a ser removido do catalogo.\n" )
 
-            # Check para evitar indices invalidos.
-            if iEscolha < 0 or iEscolha > iTamanhoDaLivraria:
-                print( "Por favor coloque um dos indices listado" )
-                continue
+    # Check para evitar indices invalidos.
+    if iEscolha < 0 or iEscolha > iTamanhoDaLivraria:
+        print( "Por favor coloque um dos numeros listado." )
+        pass
 
-            # Remova o livro.
-            lLivraria.pop( iEscolha )
-
-            # Ja atingimos nosso objetivo pare o loop.
-            break
-
-        except Exception as e:
-            # Pare o loop caso seja solicitado um interrupt ( CTRL + C ).
-            if KeyboardInterrupt == e:
-                break
-
-            print("Por favor coloque um numero")
+    # Remova o livro.
+    lLivraria.pop( iEscolha )
 
 def EmprestarLivroNaLivraria( ):
     print(pf.figlet_format("Emprestar livro"))
 
     # Mostre os livros que tem na livraria.
-    MostrarLivrosNaLivraria( lLivraria )
+    MostrarLivrosNaLivraria( lLivraria, ESTAGIOMOSTRARSOMENTEEMPRESTAVEL )
 
     # Pegue o tamanho da lista
     iTamanhoDaLivraria = len( lLivraria )
 
     # A lista ta vazia os codigos abaixo serao inuteis.
     if iTamanhoDaLivraria <= 0:
-        print( "A livraria ta vazia, por favor adicione algum livro" )
+        print( "A livraria ta vazia, por favor adicione algum livro." )
         pass
 
     # Para o loop broski.
@@ -234,55 +333,44 @@ def EmprestarLivroNaLivraria( ):
     # Parte do emprestimo.
     while True:
 
-        # braia: Por que try?
-        # Bom isso e para se o usuario por qualquer coisa exceto numero que tenha no range da lista
-        # o script nao crashar.
-        try:
-            # Salve a escolha do usuario.
-            iEscolha = int( input( "Escolha o indice do livro que deseja pegar emprestado ou digite -1 para sair \n" ) )
+        # Salve a escolha do usuario.
+        iEscolha = InputDeInteiro( "Escolha o indice do livro que deseja pegar emprestado. (digite -1 para sair) \n" )
+        
 
-            # Nosso usuario deseja sair.
-            if iEscolha == -1:
-                break
+        # Nosso usuario deseja sair.
+        if iEscolha == -1:
+            break
 
-            # Check para evitar indices invalidos.
-            if iEscolha < 0 or iEscolha > iTamanhoDaLivraria:
-                print( "Por favor coloque um dos indices listado" )
-                continue
+        # Check para evitar indices invalidos.
+        if iEscolha < 0 or iEscolha > iTamanhoDaLivraria:
+            print( "Por favor coloque um dos numeros listado." )
+            continue
 
-            # Salve o usuario que vai pegar emprestado o livro.
-            strNomeDeQuemVaiPegarEmprestado = input( "Digite o nome de quem vai pegar emprestado \n" )
+        # Salve o usuario que vai pegar emprestado o livro.
+        strNomeDeQuemVaiPegarEmprestado = input( "Digite o nome de quem vai pegar emprestado: \n" )
 
-            # Salve a idade do usuario que vai pegar emprestado o livro.
-            iIdadeDeQuemVaiPegarEmprestado = InputDeInteiro( "Digite a idade de quem vai pegar emprestado \n" )
+        # Salve a idade do usuario que vai pegar emprestado o livro.
+        iIdadeDeQuemVaiPegarEmprestado = InputDeInteiro( "Digite a idade de quem vai pegar emprestado: \n" )
 
-            # Rode a funcao dur.
-            bPare = lLivraria[ iEscolha ].Emprestar( strNomeDeQuemVaiPegarEmprestado, iIdadeDeQuemVaiPegarEmprestado )
+        # Rode a funcao dur.
+        bPare = lLivraria[ iEscolha ].Emprestar( strNomeDeQuemVaiPegarEmprestado, iIdadeDeQuemVaiPegarEmprestado )
 
-            # Pare o loop ja atingimos nosso objeto.
-            if bPare:
-                break
-
-        except Exception as e:
-            # Pare o loop caso seja solicitado um interrupt ( CTRL + C ).
-            if KeyboardInterrupt == e:
-                break
-
-            # Se acontecer outra coisa.
-            print("Por favor digite um numero")
+        # Pare o loop ja atingimos nosso objeto.
+        if bPare:
+            break
 
 def DevolverLivroNaLivraria( ):
     print( pf.figlet_format( "Devolver livro" ) )
 
     # Mostre os livros que tem na livraria.
-    MostrarLivrosNaLivraria( lLivraria )
+    MostrarLivrosNaLivraria( lLivraria, ESTAGIOMOSTRARSOMENTEEMPRESTAVEL )
 
     # Pegue o tamanho da lista
     iTamanhoDaLivraria = len( lLivraria )
 
     # A lista ta vazia os codigos abaixo serao inuteis.
     if iTamanhoDaLivraria <= 0:
-        print( "A livraria ta vazia, por favor adicione algum livro" )
+        print( "A livraria ta vazia, por favor adicione algum livro." )
         pass
 
     # Pare o loop broski.
@@ -290,44 +378,93 @@ def DevolverLivroNaLivraria( ):
 
     # Parte da devolucao.
     while True:
+            
+        # Salve a escolha do usuario.
+        iEscolha = InputDeInteiro( "Escolha o numero do livro que deseja devolver: (digite -1 para sair)\n" )
 
-        # braia: Por que try?
-        # Bom isso e para se o usuario por qualquer coisa exceto numero que tenha no range da lista
-        # o script nao crashar.
-        try:
-            # Salve a escolha do usuario.
-            iEscolha = int( input( "Escolha o indice do livro que deseja devolver ou digite -1 para sair\n" ) )
+        # Nosso usuario deseja sair.
+        if iEscolha == -1:
+            break
 
-            # Nosso usuario deseja sair.
-            if iEscolha == -1:
-                break
+        # Check para evitar indices invalidos.
+        if iEscolha < 0 or iEscolha > iTamanhoDaLivraria:
+            print( "Por favor coloque um dos numeros listado" )
+            continue
 
-            # Check para evitar indices invalidos.
-            if iEscolha < 0 or iEscolha > iTamanhoDaLivraria:
-                print( "Por favor coloque um dos indices listado" )
-                continue
+        # Salve o usuario que talvez tinha pego o livro.
+        strNomeDeQuemTalvezTenhaPegadoEmprestado = input( "Digite o nome de quem vai devolver o livro: \n" )
 
-            # Salve o usuario que talvez tinha pego o livro.
-            strNomeDeQuemTalvezTenhaPegadoEmprestado = input( "Digite o nome de quem vai devolver o livro \n" )
+        # Rode a funcao dur.
+        bPare = lLivraria[ iEscolha ].Devolver( strNomeDeQuemTalvezTenhaPegadoEmprestado )
 
-            # Rode a funcao dur.
-            bPare = lLivraria[ iEscolha ].Devolver( strNomeDeQuemTalvezTenhaPegadoEmprestado )
+        # Pare o loop ja atingimos nosso objeto.
+        if bPare:
+            break
 
-            # Pare o loop ja atingimos nosso objeto.
-            if bPare:
-                break
+def ExportacaoParaExcel( ):
+    # Cara sinceramente nao sei oq dizer.
+    # Conversao da lista livraria para pandas.
 
-        except Exception as e:
-            # Pare o loop caso seja solicitado um interrupt ( CTRL + C ).
-            if KeyboardInterrupt == e:
-                break
+    # Pegue o tamanho da lista.
+    iTamanhodaLista = len( lLivraria )
 
-            # Se acontecer outra coisa.
-            print("Por favor digite um numero")
+    # Se a lista estiver vazia nao rode essa porra.
+    if iTamanhodaLista <= 0:
+        print( "O catalogo esta vazio!" )
+        pass
+    
+    lIndicesDoDicionario = [
+                            "Nome do Livro",
+                            "Genero",
+                            "Emprestado",
+                            "Quem Adquiriu",
+                            "Data Emprestada",
+                            "Codigo do Livro",
+                            "Idade Minima",
+                            "Restricao",
+                            "Prateleira"
+                            ]
+
+    # Conversao da lista para dicionario.
+    # Pra evitar dor de cabeca.
+    dictLivraria = {
+                     "Nome do Livro"   : [],
+                     "Genero"          : [],
+                     "Emprestado"      : [],
+                     "Quem Adquiriu"   : [],
+                     "Data Emprestada" : [],
+                     "Codigo do Livro" : [],
+                     "Idade Minima"    : [],
+                     "Restricao"       : [],
+                     "Prateleira"      : [],
+                   }
+    
+    for i in range( iTamanhodaLista ):
+
+        # Pegue a classe dentro do catalogo.
+        LivroAtual: Livro = lLivraria[ i ]
+
+        dictLivraria[ lIndicesDoDicionario[ 0 ] ].append( LivroAtual.strNomeDoLivro )
+        dictLivraria[ lIndicesDoDicionario[ 1 ] ].append( LivroAtual.strGenero )
+        dictLivraria[ lIndicesDoDicionario[ 2 ] ].append( LivroAtual.bEmprestado )
+        dictLivraria[ lIndicesDoDicionario[ 3 ] ].append( LivroAtual.strQuemAdquiriu )
+        dictLivraria[ lIndicesDoDicionario[ 4 ] ].append( LivroAtual.strDataEmprestada )
+        dictLivraria[ lIndicesDoDicionario[ 5 ] ].append( LivroAtual.strCodigoDoLivro )
+        dictLivraria[ lIndicesDoDicionario[ 6 ] ].append( LivroAtual.iIdadeMinima )
+        dictLivraria[ lIndicesDoDicionario[ 7 ] ].append( LivroAtual.strRestricao )
+        dictLivraria[ lIndicesDoDicionario[ 8 ] ].append( LivroAtual.iPrateleira )
+       
+    dataframe = pd.DataFrame( dictLivraria )
+    print( dataframe )
+
+    #TODO; terminar e por a parte de import
+
+    input("Aperte qualquer tecla para continuar\n")
 
 while True:
-    print( pf.figlet_format( "livraria do leo" ) )
-    print( "1.adicionar livro                  2.remover livro\n3.emprestimo de livro              4.devolver\n\n\n" )
+    LimparConsole()
+    print(cl.Fore.CYAN + pf.figlet_format( "                            livraria do                                          Leleo          " ) )
+    print( "                                              0.Sair\n                       1.Adicionar livro                  2.Remover livro\n\n                       3.Emprestimo de livro              4.Devolver\n\n                                              5.Excel\n" )
 
     try:
         # Salve a escolha do usuario.
@@ -336,6 +473,7 @@ while True:
         match iEscolha:
             # Sair do Script.
             case 0:
+                LimparConsole( )
                 break
 
             # Adicionar livro na livraria.
@@ -358,14 +496,20 @@ while True:
                 LimparConsole( )
                 DevolverLivroNaLivraria( )
 
+            # Sistema de exportacao.
+            case 5:
+                LimparConsole( )
+                ExportacaoParaExcel( )
+
             # Caso se o numero nao for nenhum dos anteriores.
             case _:
                 # braia: por o default: do python e case _ que porra e essa.
                 print( "Numero invalido tente novamente" )
-                tm.sleep( 2 )
+                tm.sleep( 1 )
 
     except Exception as e:
         if KeyboardInterrupt == e:
             break
-
+        
+        LimparConsole( )
         print( "Digite um numero por favor" )
