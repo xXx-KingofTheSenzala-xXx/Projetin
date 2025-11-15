@@ -81,7 +81,7 @@ class Livro:
 def MostrarLivrosNaLivraria( Livraria: list, Estagio: int = ESTAGIOPADRAO, IndiceDoEscolhido: int = 0 ):
     iTamanhoDaLivraria = len( Livraria )
     if iTamanhoDaLivraria <= 0:
-        pass
+        return
 
     # Vamos percorrer a lista agora se ela nao esta vazia.
     for i in range( iTamanhoDaLivraria ):
@@ -119,7 +119,7 @@ def MostrarLivrosNaLivraria( Livraria: list, Estagio: int = ESTAGIOPADRAO, Indic
 def TemLivrosParaEmprestar( Livraria: list ):
     iTamanhoDaLivraria = len( Livraria )
     if iTamanhoDaLivraria <= 0:
-        pass
+        return False
 
     # Vamos percorrer a lista agora se ela nao esta vazia.
     for i in range( iTamanhoDaLivraria ):
@@ -136,7 +136,7 @@ def TemLivrosParaEmprestar( Livraria: list ):
 def TemLivrosParaDevolver( Livraria: list ):
     iTamanhoDaLivraria = len( Livraria )
     if iTamanhoDaLivraria <= 0:
-        pass
+        return False
 
     # Vamos percorrer a lista agora se ela nao esta vazia.
     for i in range( iTamanhoDaLivraria ):
