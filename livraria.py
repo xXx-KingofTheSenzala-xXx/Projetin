@@ -24,7 +24,7 @@ import pandas as pd
 import pyfiglet as pf
 import time as tm
 import colorama as cl
-import utils
+import Utils
 import BaseLivraria
 
 ESTAGIOPADRAO = 0
@@ -43,33 +43,33 @@ def AdicionarLivroNaLivraria( ):
 
         print( pf.figlet_format( "Adicionar livro" ) )
         strNomeDoLivro = input( "Diga o nome do livro: " )
-        utils.LimparConsole()
+        Utils.LimparConsole()
         
         print( pf.figlet_format( "Adicionar livro" ) )
         print(f"Nome: {strNomeDoLivro}")
         strGenero = input( "Diga o genero do livro: " )
-        utils.LimparConsole()
+        Utils.LimparConsole()
         
         print( pf.figlet_format( "Adicionar livro" ) )
         print(f"Nome: {strNomeDoLivro}")
         print(f"Genero: {strGenero}")
-        iIdadeMinima = utils.InputDeIdadeMinima( "Diga a idade minima para adquirir o livro( L  10   12   14   16   18 ): " )
-        utils.LimparConsole()
+        iIdadeMinima = Utils.InputDeIdadeMinima( "Diga a idade minima para adquirir o livro( L  10   12   14   16   18 ): " )
+        Utils.LimparConsole()
         
         print( pf.figlet_format( "Adicionar livro" ) )
         print(f"Nome: {strNomeDoLivro}")
         print(f"Genero: {strGenero}")
         print(f"classificação: {iIdadeMinima}")
-        strRestricao = utils.InputDeRestricao( "Diga qual restricao esse livro possui se e vermelho ou verde: " )
-        utils.LimparConsole()
+        strRestricao = Utils.InputDeRestricao( "Diga qual restricao esse livro possui se e vermelho ou verde: " )
+        Utils.LimparConsole()
 
         print( pf.figlet_format( "Adicionar livro" ) )
         print(f"Nome: {strNomeDoLivro}")
         print(f"Genero: {strGenero}")
         print(f"classificação: {iIdadeMinima}")
         print(f"restrição : {strRestricao}")
-        iPrateleira = utils.InputDeInteiro( "Diga qual prateleira esse livro pertence: " )
-        utils.LimparConsole()
+        iPrateleira = Utils.InputDeInteiro( "Diga qual prateleira esse livro pertence: " )
+        Utils.LimparConsole()
         
         print( pf.figlet_format( "Adicionar livro" ) )
         print(f"Nome: {strNomeDoLivro}")
@@ -81,7 +81,7 @@ def AdicionarLivroNaLivraria( ):
         while True:
             x = input("\n ta certo?(N/Y)").upper( )
             if x == ("N"):
-                utils.LimparConsole( )
+                Utils.LimparConsole( )
                 break
             elif x == ("Y"):
                 bPare = True
@@ -112,7 +112,7 @@ def RemoverLivroNaLivraria( ):
         return
 
     # Salve a escolha do usuario.
-    iEscolha = utils.InputDeInteiro( "Diga o numero do livro a ser removido do catalogo.\n" )
+    iEscolha = Utils.InputDeInteiro( "Diga o numero do livro a ser removido do catalogo.\n" )
 
     # Check para evitar indices invalidos.
     if iEscolha < 0 or iEscolha > iTamanhoDaLivraria:
@@ -144,7 +144,7 @@ def EmprestarLivroNaLivraria( ):
     while True:
 
         # Salve a escolha do usuario.
-        iEscolha = utils.InputDeInteiro( "Escolha o indice do livro que deseja pegar emprestado. (digite -1 para sair) \n" )
+        iEscolha = Utils.InputDeInteiro( "Escolha o indice do livro que deseja pegar emprestado. (digite -1 para sair) \n" )
         
         # Nosso usuario deseja sair.
         if iEscolha == -1:
@@ -159,7 +159,7 @@ def EmprestarLivroNaLivraria( ):
         strNomeDeQuemVaiPegarEmprestado = input( "Digite o nome de quem vai pegar emprestado: \n" )
 
         # Salve a idade do usuario que vai pegar emprestado o livro.
-        iIdadeDeQuemVaiPegarEmprestado = utils.InputDeInteiro( "Digite a idade de quem vai pegar emprestado: \n" )
+        iIdadeDeQuemVaiPegarEmprestado = Utils.InputDeInteiro( "Digite a idade de quem vai pegar emprestado: \n" )
 
         # Rode a funcao dur.
         bPare = lLivraria[ iEscolha ].Emprestar( strNomeDeQuemVaiPegarEmprestado, iIdadeDeQuemVaiPegarEmprestado )
@@ -190,7 +190,7 @@ def DevolverLivroNaLivraria( ):
     while True:
             
         # Salve a escolha do usuario.
-        iEscolha = utils.InputDeInteiro( "Escolha o numero do livro que deseja devolver: (digite -1 para sair)\n" )
+        iEscolha = Utils.InputDeInteiro( "Escolha o numero do livro que deseja devolver: (digite -1 para sair)\n" )
 
         # Nosso usuario deseja sair.
         if iEscolha == -1:
@@ -257,7 +257,7 @@ def ConversaoDaListaParaDicionario( Livraria: list ):
     for i in range( iTamanhodaLista ):
 
         # Pegue a classe dentro do catalogo.
-        LivroAtual: utils.Livro = Livraria[ i ]
+        LivroAtual: Utils.Livro = Livraria[ i ]
 
         dictLivraria[ lIndicesDoDicionario[ 0 ] ].append( LivroAtual.strNomeDoLivro )
         dictLivraria[ lIndicesDoDicionario[ 1 ] ].append( LivroAtual.strGenero )
@@ -299,7 +299,7 @@ def OperacoesEmExcel( ):
 
     while True:
         # Salve a escolha.
-        iEscolha = utils.InputDeInteiro( )
+        iEscolha = Utils.InputDeInteiro( )
 
         match iEscolha:
             case 1:
@@ -318,7 +318,7 @@ def OperacoesEmExcel( ):
     input("Aperte qualquer tecla para continuar\n")
 
 while True:
-    utils.LimparConsole( )
+    Utils.LimparConsole( )
     print(cl.Fore.CYAN + pf.figlet_format( "                            livraria do                                          Leleo          " ) )
     print( "                                              0.Sair\n                       1.Adicionar livro                  2.Remover livro\n\n                       3.Emprestimo de livro              4.Devolver\n\n                                              5.Excel\n" )
 
@@ -329,32 +329,32 @@ while True:
         match iEscolha:
             # Sair do Script.
             case 0:
-                utils.LimparConsole( )
+                Utils.LimparConsole( )
                 break
 
             # Adicionar livro na livraria.
             case 1:
-                utils.LimparConsole( )
+                Utils.LimparConsole( )
                 AdicionarLivroNaLivraria( )
 
             # Remover livro na livraria.
             case 2:
-                utils.LimparConsole( )
+                Utils.LimparConsole( )
                 RemoverLivroNaLivraria( )
 
             # Emprestar livro na livraria.
             case 3:
-                utils.LimparConsole( )
+                Utils.LimparConsole( )
                 EmprestarLivroNaLivraria( )
 
             # Devolver livro na livraria.
             case 4:
-                utils.LimparConsole( )
+                Utils.LimparConsole( )
                 DevolverLivroNaLivraria( )
 
             # Sistema de exportacao.
             case 5:
-                utils.LimparConsole( )
+                Utils.LimparConsole( )
                 OperacoesEmExcel( )
 
             # Caso se o numero nao for nenhum dos anteriores.
@@ -367,5 +367,5 @@ while True:
         if KeyboardInterrupt == e:
             break
         
-        utils.LimparConsole( )
+        Utils.LimparConsole( )
         print( "Digite um numero por favor" )
