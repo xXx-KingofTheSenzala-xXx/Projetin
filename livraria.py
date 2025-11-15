@@ -136,6 +136,12 @@ def EmprestarLivroNaLivraria( ):
         print( "nenhum livro aqui.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" )
         input( "Aperte 'ENTER' para continuar" )
         return
+    
+    # Nao tem nenhum livro para ser emprestado.
+    if BaseLivraria.TemLivrosParaEmprestar( lLivraria ):
+        print( "nenhum livro para emprestar.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" )
+        input( "Aperte 'ENTER' para continuar" )
+        return
 
     # Para o loop broski.
     bPare = False
@@ -153,6 +159,13 @@ def EmprestarLivroNaLivraria( ):
         # Check para evitar indices invalidos.
         if iEscolha < 0 or iEscolha > iTamanhoDaLivraria:
             print( "Por favor coloque um dos numeros listado." )
+            continue
+        
+        LivroAtual: BaseLivraria.Livro = lLivraria[ iEscolha ]
+
+        # Check se o livro nao foi emprestado.
+        if LivroAtual.bEmprestado:
+            print( "Esse livro ja foi emprestado" )
             continue
 
         # Salve o usuario que vai pegar emprestado o livro.
@@ -182,6 +195,12 @@ def DevolverLivroNaLivraria( ):
         print( "nenhum livro aqui.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" )
         input( "Aperte 'ENTER' para continuar" )
         return
+    
+    # Nao tem nenhum livro para ser emprestado.
+    if BaseLivraria.TemLivrosParaDevolver( lLivraria ):
+        print( "nenhum livro para devolver.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" )
+        input( "Aperte 'ENTER' para continuar" )
+        return
 
     # Pare o loop broski.
     bPare = False
@@ -205,7 +224,7 @@ def DevolverLivroNaLivraria( ):
 
         # Check se o livro nao foi emprestado.
         if not LivroAtual.bEmprestado:
-            print( "Esse livro ja foi emprestado" )
+            print( "Esse livro ja nao foi emprestado" )
             continue
 
         # Salve o usuario que talvez tinha pego o livro.

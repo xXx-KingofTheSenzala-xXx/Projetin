@@ -115,3 +115,37 @@ def MostrarLivrosNaLivraria( Livraria: list, Estagio: int = ESTAGIOPADRAO, Indic
 
         # Mostre.
         print( strDisplayDoLivro )
+
+def TemLivrosParaEmprestar( Livraria: list ):
+    iTamanhoDaLivraria = len( Livraria )
+    if iTamanhoDaLivraria <= 0:
+        pass
+
+    # Vamos percorrer a lista agora se ela nao esta vazia.
+    for i in range( iTamanhoDaLivraria ):
+
+        # Pegue a classe dentro da lista.
+        LivroAtual: Livro = Livraria[ i ]
+
+        # Verifique se tem algum livro para emprestar.
+        if not LivroAtual.bEmprestado:
+            return True
+
+    return False
+
+def TemLivrosParaDevolver( Livraria: list ):
+    iTamanhoDaLivraria = len( Livraria )
+    if iTamanhoDaLivraria <= 0:
+        pass
+
+    # Vamos percorrer a lista agora se ela nao esta vazia.
+    for i in range( iTamanhoDaLivraria ):
+
+        # Pegue a classe dentro da lista.
+        LivroAtual: Livro = Livraria[ i ]
+
+        # Verifique se tem algum livro para devolver.
+        if LivroAtual.bEmprestado:
+            return True
+
+    return False
