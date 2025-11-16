@@ -24,6 +24,9 @@ import pandas as pd
 import pyfiglet as pf
 import time as tm
 import colorama as cl
+import os
+
+# arquivos locais importados.
 import Utils
 import BaseLivraria
 
@@ -138,7 +141,7 @@ def EmprestarLivroNaLivraria( ):
         return
     
     # Nao tem nenhum livro para ser emprestado.
-    if BaseLivraria.TemLivrosParaEmprestar( lLivraria ):
+    if not BaseLivraria.TemLivrosParaEmprestar( lLivraria ):
         print( "nenhum livro para emprestar.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" )
         input( "Aperte 'ENTER' para continuar" )
         return
@@ -197,7 +200,7 @@ def DevolverLivroNaLivraria( ):
         return
     
     # Nao tem nenhum livro para ser emprestado.
-    if BaseLivraria.TemLivrosParaDevolver( lLivraria ):
+    if not BaseLivraria.TemLivrosParaDevolver( lLivraria ):
         print( "nenhum livro para devolver.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n" )
         input( "Aperte 'ENTER' para continuar" )
         return
@@ -276,7 +279,7 @@ def ConversaoDaListaParaDicionario( Livraria: list ):
     for i in range( iTamanhodaLista ):
 
         # Pegue a classe dentro do catalogo.
-        LivroAtual: Utils.Livro = Livraria[ i ]
+        LivroAtual: BaseLivraria.Livro = Livraria[ i ]
 
         dictLivraria[ lIndicesDoDicionario[ 0 ] ].append( LivroAtual.strNomeDoLivro )
         dictLivraria[ lIndicesDoDicionario[ 1 ] ].append( LivroAtual.strGenero )
@@ -290,27 +293,130 @@ def ConversaoDaListaParaDicionario( Livraria: list ):
     
     return dictLivraria
 
-def ExportacaoParaExcel( Entrada: pd.DataFrame ):
+def ConversaoDeDicionarioParaLista( Livraria: dict ):
+    # braia: for real cara acho q fazendo isso perdi 5 anos de vida por tanto estresse sem kao vo me matar.
+    # volta pra mim mariana me perdoe por ser um verme cntg
+
+    lIndicesDoDicionario = [
+                            "Nome do Livro",
+                            "Genero",
+                            "Emprestado",
+                            "Quem Adquiriu",
+                            "Data Emprestada",
+                            "Codigo do Livro",
+                            "Idade Minima",
+                            "Restricao",
+                            "Prateleira"
+                            ]
+    
+    # braia: ta? se eu nao me engano isso talvez funcione
+    # o dataframe nao e criado se os array la de dentro n tiver o mesmo tamanho
+    # entao isso talvez esteja certo xddddddd.
+    iTamanhoDaLista = len( Livraria[ lIndicesDoDicionario[ 0 ] ] )
+
+    # pode falar isso ta muito feio mas to com preguica de arrumar por agora
+    # talvez no final eu otimize isso lol
+    # cara aquela mulher era gostosa em.
+    for i in range( iTamanhoDaLista ):
+        LivroAtual : BaseLivraria.Livro = BaseLivraria.Livro( "null", "null", 0, "null", 0, [] )
+
+        LivroAtual.strNomeDoLivro    = Livraria[ lIndicesDoDicionario[ 0 ] ][ i ]
+        LivroAtual.strGenero         = Livraria[ lIndicesDoDicionario[ 1 ] ][ i ]
+        LivroAtual.bEmprestado       = Livraria[ lIndicesDoDicionario[ 2 ] ][ i ]
+        LivroAtual.strQuemAdquiriu   = Livraria[ lIndicesDoDicionario[ 3 ] ][ i ]
+        LivroAtual.strDataEmprestada = Livraria[ lIndicesDoDicionario[ 4 ] ][ i ]
+        LivroAtual.strCodigoDoLivro  = Livraria[ lIndicesDoDicionario[ 5 ] ][ i ]
+        LivroAtual.iIdadeMinima      = Livraria[ lIndicesDoDicionario[ 6 ] ][ i ]
+        LivroAtual.strRestricao      = Livraria[ lIndicesDoDicionario[ 7 ] ][ i ]
+        LivroAtual.iPrateleira       = Livraria[ lIndicesDoDicionario[ 8 ] ][ i ]
+
+        lLivraria.append( LivroAtual )
+
+def ExportacaoParaExcel( ):
     # braia: ta essa funcao pode esta incompleta e mal feita
     # porem deve funcionar lel.
 
+     # Pegue o tamanho da lista.
+    iTamanhodaLista = len( lLivraria )
+
+    # Se a lista estiver vazia nao rode essa porra.
+    if iTamanhodaLista <= 0:
+        print( "O catalogo esta vazio!" )
+        input( "Aperte 'ENTER' para continuar" )
+        return
+
+    # Vamos salvar essa bosta numa pasta aqui onde o script foi rodado.
+    # me lembro disto ser mais dificil.
+    strDiretorioAtual = os.getcwd( )
+
+    # Direcione para o diretorio desejado.
+    strDiretorioAtual = os.path.join( strDiretorioAtual, "output" )
+
+    # Vamos criar a pasta se nao existir logico e se tiver permissao.
+    try:
+        os.mkdir( strDiretorioAtual )
+    except Exception as e:
+        if e == FileExistsError:
+            print( "pasta ja criada anteriormente, ignorando funcao de criacao da pasta." )
+        
+        if e == PermissionError:
+            print( "essa pasta nao pode ser criada no diretorio onde se encontra o script, provavelmente essa pasta e restrita para administradores." )
+
     # Salve o nome desejado para o arquivo.
-    strNomeDoArquivo = input("Qual sera o nome do arquivo?")
+    strNomeDoArquivo = input( "Qual sera o nome do arquivo? \n" )
+    strNomeDoArquivo += ".xlsx"
 
-    # Exporte isso.
-    Entrada.to_excel( strNomeDoArquivo + ".xlsx" )
-
-def ImportacaoParaExcel( ):
-    pass
-
-def OperacoesEmExcel( ):
-    # Cara sinceramente nao sei oq dizer.
+    # aqui vai ser o diretorio da saida mais o nome do arquivo que vai ser gerado.
+    strDiretorioFinal = os.path.join( strDiretorioAtual, strNomeDoArquivo )
 
     # Converte a lista para dicionario.
     dictLivraria = ConversaoDaListaParaDicionario( lLivraria )
     
     # Conversao da lista livraria para pandas.
-    dataframe = pd.DataFrame( dictLivraria )
+    dfEntrada = pd.DataFrame( dictLivraria )
+
+    # Exporte isso.
+    dfEntrada.to_excel( strDiretorioFinal, index=False )
+
+    #DEBUG;
+    print( dictLivraria )
+    print( dfEntrada )
+
+    print( f"Arquivo excel gerado em: {strDiretorioFinal}" )
+    input( "Aperte 'ENTER' para continuar" )
+
+def ImportacaoParaExcel( ):
+    # braia: cara isso deu uma dor de cabeca q vc n ta ligado.
+
+    # Cara isso ficou mt foda taaaaa?
+    strCaminhoParaOArquivoExcel = Utils.BusqueOArquivo( )
+
+    if strCaminhoParaOArquivoExcel == "":
+        print("Diretorio nao selecionado, retornando...")
+        return
+    
+    # braia: uma pequena observacao, eu tenho ctz se por a caso corromper o arquivo isso ai vai pro krl.
+
+    # Parte da leitura do arquivo excel.
+    ArquivoExcel = pd.read_excel( strCaminhoParaOArquivoExcel )
+
+    #DEBUG;
+    print( ArquivoExcel )
+
+    # Parte da conversao para dicionario, o orient='list' e para usar lista
+    # no dicionario vai ser mais facil para converter novamente para a classe.
+    dictConversaoParaDictionario = ArquivoExcel.to_dict( orient='list' )
+
+    #DEBUG;
+    print(dictConversaoParaDictionario)
+
+    # Como toda lista nesse dicionario tem o mesmo tamanho provavel que isso de certo.
+    ConversaoDeDicionarioParaLista( dictConversaoParaDictionario )
+
+    input( "Aperte 'ENTER' para continuar" )
+
+def OperacoesEmExcel( ):
+    # Cara sinceramente nao sei oq dizer.
 
     print( "O que voce deseja?" )
     print( "1 - Exportar" )
@@ -318,23 +424,17 @@ def OperacoesEmExcel( ):
 
     while True:
         # Salve a escolha.
-        iEscolha = Utils.InputDeInteiro( )
+        iEscolha = Utils.InputDeInteiro( "" )
 
         match iEscolha:
             case 1:
-                ExportacaoParaExcel( dataframe )
+                ExportacaoParaExcel( )
                 break
             case 2:
                 ImportacaoParaExcel( )
                 break
             case _:
                 print( "Numero fora da lista de escolha" )
-
-    # Mostre o role.
-    #print( dataframe )
-
-    #TODO; terminar e por a parte de import
-    input("Aperte qualquer tecla para continuar\n")
 
 while True:
     Utils.LimparConsole( )
@@ -386,5 +486,9 @@ while True:
         if KeyboardInterrupt == e:
             break
         
-        Utils.LimparConsole( )
-        print( "Digite um numero por favor" )
+        #Utils.LimparConsole( )
+        #print( "Digite um numero por favor" )
+
+        #DEBUG;
+        print( f"erro: {e}")
+        input( "Aperte 'ENTER' para continuar" )
