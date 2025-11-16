@@ -34,12 +34,12 @@ def TempoAtual( ):
     return f"as:{ horas1 } do dia: { agora }"
 
 class Livro:
-    def __init__( self, NomeDoLivro, Genero, IdadeMinima, Restricao, Prateleira, Livraria ):
+    def __init__( self, NomeDoLivro: str, Genero: str, IdadeMinima: int, Restricao: str, Prateleira: int , Livraria: list ):
         self.strNomeDoLivro: str = NomeDoLivro
         self.strGenero: str = Genero
         self.bEmprestado: bool = False
-        self.strQuemAdquiriu: str = ""
-        self.strDataEmprestada: str = ""
+        self.strQuemAdquiriu: str = "-"
+        self.strDataEmprestada: str = "-"
         self.strCodigoDoLivro: str = GerarCodigoUnico( Livraria, 6 )
         self.iIdadeMinima: int = IdadeMinima
         self.strRestricao: str = Restricao
@@ -66,7 +66,7 @@ class Livro:
 
     def Devolver( self, NomeDeQuemAdquiriu: str ):
         if self.bEmprestado and self.strQuemAdquiriu == NomeDeQuemAdquiriu:
-            self.strQuemAdquiriu: str = ""
+            self.strQuemAdquiriu: str = "-"
             self.bEmprestado: bool = False
             return True
 
