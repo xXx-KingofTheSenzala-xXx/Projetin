@@ -97,7 +97,7 @@ def AdicionarLivroNaLivraria( ):
             break
 
     # adiciona as informacoes a classe.
-    NovoLivro = BaseLivraria.Livro( strNomeDoLivro, strGenero, iIdadeMinima, strRestricao, iPrateleira, lLivraria )
+    NovoLivro = BaseLivraria.Livro( strNomeDoLivro, strGenero, False, "-", "-", BaseLivraria.GerarCodigoUnico( lLivraria, 6 ), iIdadeMinima, strRestricao, iPrateleira )
 
     # adiciona o livro a lista.
     lLivraria.append( NovoLivro )
@@ -317,21 +317,17 @@ def ConversaoDeDicionarioParaLista( Livraria: dict ):
     # entao isso talvez esteja certo xddddddd.
     iTamanhoDaLista = len( Livraria[ lIndicesDoDicionario[ 0 ] ] )
 
-    # pode falar isso ta muito feio mas to com preguica de arrumar por agora
-    # talvez no final eu otimize isso lol
     # cara aquela mulher era gostosa em.
     for i in range( iTamanhoDaLista ):
-        LivroAtual : BaseLivraria.Livro = BaseLivraria.Livro( "null", "null", 0, "null", 0, [] )
-
-        LivroAtual.strNomeDoLivro    = Livraria[ lIndicesDoDicionario[ 0 ] ][ i ]
-        LivroAtual.strGenero         = Livraria[ lIndicesDoDicionario[ 1 ] ][ i ]
-        LivroAtual.bEmprestado       = Livraria[ lIndicesDoDicionario[ 2 ] ][ i ]
-        LivroAtual.strQuemAdquiriu   = Livraria[ lIndicesDoDicionario[ 3 ] ][ i ]
-        LivroAtual.strDataEmprestada = Livraria[ lIndicesDoDicionario[ 4 ] ][ i ]
-        LivroAtual.strCodigoDoLivro  = Livraria[ lIndicesDoDicionario[ 5 ] ][ i ]
-        LivroAtual.iIdadeMinima      = Livraria[ lIndicesDoDicionario[ 6 ] ][ i ]
-        LivroAtual.strRestricao      = Livraria[ lIndicesDoDicionario[ 7 ] ][ i ]
-        LivroAtual.iPrateleira       = Livraria[ lIndicesDoDicionario[ 8 ] ][ i ]
+        LivroAtual : BaseLivraria.Livro = BaseLivraria.Livro( Livraria[ lIndicesDoDicionario[ 0 ] ][ i ],
+                                                              Livraria[ lIndicesDoDicionario[ 1 ] ][ i ],
+                                                              Livraria[ lIndicesDoDicionario[ 2 ] ][ i ],
+                                                              Livraria[ lIndicesDoDicionario[ 3 ] ][ i ],
+                                                              Livraria[ lIndicesDoDicionario[ 4 ] ][ i ], 
+                                                              Livraria[ lIndicesDoDicionario[ 5 ] ][ i ],
+                                                              Livraria[ lIndicesDoDicionario[ 6 ] ][ i ],
+                                                              Livraria[ lIndicesDoDicionario[ 7 ] ][ i ], 
+                                                              Livraria[ lIndicesDoDicionario[ 8 ] ][ i ] )
 
         lLivraria.append( LivroAtual )
 

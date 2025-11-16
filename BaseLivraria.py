@@ -6,6 +6,57 @@ ESTAGIOMOSTRARSOMENTEEMPRESTAVEL = 1
 ESTAGIOMOSTRARESCOLHIDO = 2
 ESTAGIOMOSTRAREMPRESTADOS = 3
 
+def TempoAtual( ):
+    agora = dt.date.today( )
+    horas = dt.datetime.now( ).time( )
+    horas1 = horas.strftime( "%H:%M" )
+    return f"as:{ horas1 } do dia: { agora }"
+
+class Livro:
+    def __init__( self, NomeDoLivro: str, Genero: str, Emprestado: bool, QuemAdquiriu: str, DataEmprestada: str, CodigoDoLivro: str, IdadeMinima: int, Restricao: str, Prateleira: int ):
+        self.strNomeDoLivro: str    = NomeDoLivro
+        self.strGenero: str         = Genero
+        self.bEmprestado: bool      = Emprestado
+        self.strQuemAdquiriu: str   = QuemAdquiriu
+        self.strDataEmprestada: str = DataEmprestada
+        self.strCodigoDoLivro: str  = CodigoDoLivro
+        self.iIdadeMinima: int      = IdadeMinima
+        self.strRestricao: str      = Restricao
+        self.iPrateleira: int       = Prateleira
+
+    def Emprestar( self, NomeDeQuemAdquiriu: str, IdadeDeQuemAdquiriu: int ):
+        if not self.bEmprestado and IdadeDeQuemAdquiriu >= self.iIdadeMinima and self.strRestricao != "Vermelho":
+            self.strQuemAdquiriu: str   = NomeDeQuemAdquiriu
+            self.strDataEmprestada: str = TempoAtual( )
+            self.bEmprestado: bool      = True
+            return True
+
+        elif IdadeDeQuemAdquiriu < self.iIdadeMinima:
+            print( "A faixa etária desse livro não e permitido para esse aluno." )
+            return False
+
+        elif self.strRestricao == "Vermelho":
+            print( "Esse livro é VERMELHO não pode ser emprestado." )
+            return False
+
+        # Debug
+        print( "Esse livro ja foi emprestado." )
+        return False
+
+    def Devolver( self, NomeDeQuemAdquiriu: str ):
+        if self.bEmprestado and self.strQuemAdquiriu == NomeDeQuemAdquiriu:
+            self.strQuemAdquiriu: str = "-"
+            self.bEmprestado: bool    = False
+            return True
+
+        elif self.strQuemAdquiriu != NomeDeQuemAdquiriu:
+            print( "Não foi esse aluno que pegou emprestado." )
+            return False
+
+        # Debug
+        print( "Esse livro ja foi devolvido." )
+        return False
+    
 def GerarCodigoUnico( Livraria: list, nTamanho: int ):
     while True:
         # Gere o codigo.
@@ -26,57 +77,6 @@ def GerarCodigoUnico( Livraria: list, nTamanho: int ):
             break
 
     return strCodigo
-
-def TempoAtual( ):
-    agora = dt.date.today( )
-    horas = dt.datetime.now( ).time( )
-    horas1 = horas.strftime( "%H:%M" )
-    return f"as:{ horas1 } do dia: { agora }"
-
-class Livro:
-    def __init__( self, NomeDoLivro: str, Genero: str, IdadeMinima: int, Restricao: str, Prateleira: int , Livraria: list ):
-        self.strNomeDoLivro: str = NomeDoLivro
-        self.strGenero: str = Genero
-        self.bEmprestado: bool = False
-        self.strQuemAdquiriu: str = "-"
-        self.strDataEmprestada: str = "-"
-        self.strCodigoDoLivro: str = GerarCodigoUnico( Livraria, 6 )
-        self.iIdadeMinima: int = IdadeMinima
-        self.strRestricao: str = Restricao
-        self.iPrateleira: int = Prateleira
-
-    def Emprestar( self, NomeDeQuemAdquiriu: str, IdadeDeQuemAdquiriu: int ):
-        if not self.bEmprestado and IdadeDeQuemAdquiriu >= self.iIdadeMinima and self.strRestricao != "Vermelho":
-            self.strQuemAdquiriu: str = NomeDeQuemAdquiriu
-            self.strDataEmprestada: str = TempoAtual( )
-            self.bEmprestado: bool = True
-            return True
-
-        elif IdadeDeQuemAdquiriu < self.iIdadeMinima:
-            print( "A faixa etária desse livro não e permitido para esse aluno." )
-            return False
-
-        elif self.strRestricao == "Vermelho":
-            print( "Esse livro é VERMELHO não pode ser emprestado." )
-            return False
-
-        # Debug
-        print( "Esse livro ja foi emprestado." )
-        return False
-
-    def Devolver( self, NomeDeQuemAdquiriu: str ):
-        if self.bEmprestado and self.strQuemAdquiriu == NomeDeQuemAdquiriu:
-            self.strQuemAdquiriu: str = "-"
-            self.bEmprestado: bool = False
-            return True
-
-        elif self.strQuemAdquiriu != NomeDeQuemAdquiriu:
-            print( "Não foi esse aluno que pegou emprestado." )
-            return False
-
-        # Debug
-        print( "Esse livro ja foi devolvido." )
-        return False
 
 def MostrarLivrosNaLivraria( Livraria: list, Estagio: int = ESTAGIOPADRAO, IndiceDoEscolhido: int = 0 ):
     iTamanhoDaLivraria = len( Livraria )
