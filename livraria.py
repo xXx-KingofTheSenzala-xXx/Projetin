@@ -378,10 +378,6 @@ def ExportacaoParaExcel( ):
     # Exporte isso.
     dfEntrada.to_excel( strDiretorioFinal, index=False )
 
-    #DEBUG;
-    print( dictLivraria )
-    print( dfEntrada )
-
     print( f"Arquivo excel gerado em: {strDiretorioFinal}" )
     input( "Aperte 'ENTER' para continuar" )
 
@@ -400,15 +396,9 @@ def ImportacaoParaExcel( ):
     # Parte da leitura do arquivo excel.
     ArquivoExcel = pd.read_excel( strCaminhoParaOArquivoExcel )
 
-    #DEBUG;
-    print( ArquivoExcel )
-
     # Parte da conversao para dicionario, o orient='list' e para usar lista
     # no dicionario vai ser mais facil para converter novamente para a classe.
     dictConversaoParaDictionario = ArquivoExcel.to_dict( orient='list' )
-
-    #DEBUG;
-    print(dictConversaoParaDictionario)
 
     # Como toda lista nesse dicionario tem o mesmo tamanho provavel que isso de certo.
     ConversaoDeDicionarioParaLista( dictConversaoParaDictionario )
