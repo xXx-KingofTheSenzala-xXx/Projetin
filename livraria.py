@@ -41,9 +41,6 @@ def AdicionarLivroNaLivraria( ):
     bPare = False
 
     while True:
-        if bPare:
-            break
-
         print( pf.figlet_format( "Adicionar livro" ) )
         strNomeDoLivro = input( "Diga o nome do livro: " )
         Utils.LimparConsole( )
@@ -82,16 +79,22 @@ def AdicionarLivroNaLivraria( ):
         print( f"Pratileira: { iPrateleira }" )
 
         while True:
-            x = input("\n ta certo?(N/Y)").upper( )
-            if x == ("N"):
+
+            # Salve a escolha do usuario, o upper( ) e para padronizar.
+            strEscolha = input( "\n ta certo? ( Y/N ) " ).upper( )
+
+            if strEscolha == "N":
                 Utils.LimparConsole( )
                 break
-            elif x == ("Y"):
+            elif strEscolha == "Y":
                 bPare = True
                 break
             else:
-                print("Opções invalida")
+                print( "Opções invalida" )
                 continue
+        
+        if bPare:
+            break
 
     # adiciona as informacoes a classe.
     NovoLivro = BaseLivraria.Livro( strNomeDoLivro, strGenero, iIdadeMinima, strRestricao, iPrateleira, lLivraria )
