@@ -1,4 +1,5 @@
 import os
+import wx
 
 def LimparConsole( ):
     # braia: Para que isso?
@@ -84,3 +85,18 @@ def InputDeIdadeMinima( strEntrada: str ):
             print("numero invalido")  
 
     return iIdadeMinima
+
+def BusqueOArquivo( ):
+   # Initialize the wx application
+    app = wx.App( False )
+
+    # Open a file dialog
+    wxFileDialog = wx.FileDialog( None, "Select a file", wildcard="*.xlsx", style=wx.FD_OPEN | wx.FD_FILE_MUST_EXIST )
+
+    strCaminhoDoArquivo = ""
+    if wxFileDialog.ShowModal( ) == wx.ID_OK:
+        strCaminhoDoArquivo = wxFileDialog.GetPath( )
+
+    wxFileDialog.Destroy( )
+
+    return strCaminhoDoArquivo
