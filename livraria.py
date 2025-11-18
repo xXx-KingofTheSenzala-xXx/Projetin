@@ -37,7 +37,7 @@ ESTAGIOMOSTRAREMPRESTADOS = 3
 
 lLivraria: list = [ ]
 
-def AdicionarLivroNaLivraria( ):
+def AdicionarUmLivroNaLivraria( ):
     bPare = False
 
     while True:
@@ -101,6 +101,98 @@ def AdicionarLivroNaLivraria( ):
 
     # adiciona o livro a lista.
     lLivraria.append( NovoLivro )
+
+def AdicionarMultiplosLivrosNaLivraria( ):
+    bPare = False
+
+    while True:
+        print( pf.figlet_format( "Adicionar livro" ) )
+        strNomeDoLivro = input( "Diga o nome do livro: " )
+        Utils.LimparConsole( )
+        
+        print( pf.figlet_format( "Adicionar livro" ) )
+        print(f"Nome: { strNomeDoLivro }")
+        strGenero = input( "Diga o genero do livro: " )
+        Utils.LimparConsole( )
+        
+        print( pf.figlet_format( "Adicionar livro" ) )
+        print( f"Nome: { strNomeDoLivro }" )
+        print( f"Genero: { strGenero }" )
+        iIdadeMinima = Utils.InputDeIdadeMinima( "Diga a idade minima para adquirir o livro( L  10   12   14   16   18 ): " )
+        Utils.LimparConsole( )
+
+        print( pf.figlet_format( "Adicionar livro" ) )
+        print( f"Nome: { strNomeDoLivro }" )
+        print( f"Genero: { strGenero }" )
+        print( f"Classificação: { iIdadeMinima }" )
+        iPrateleira = Utils.InputDeInteiro( "Diga qual prateleira esse livro pertence: " )
+        Utils.LimparConsole( )
+
+        print( pf.figlet_format( "Adicionar livro" ) )
+        print( f"Nome: { strNomeDoLivro }" )
+        print( f"Genero: { strGenero }" )
+        print( f"Classificação: { iIdadeMinima }" )
+        print( f"Pratileira: { iPrateleira }" )
+        iQuantidade = Utils.InputDeQuantidade( "Diga quantos livros iguais serao adicionados: " )
+        Utils.LimparConsole( )
+        
+        print( pf.figlet_format( "Adicionar livro" ) )
+        print( f"Nome: { strNomeDoLivro }" )
+        print( f"Genero: { strGenero }" )
+        print( f"Classificação: { iIdadeMinima }" )
+        print( f"Pratileira: { iPrateleira }" )
+        print( f"Quantidade: { iQuantidade }" )
+
+        while True:
+
+            # Salve a escolha do usuario, o upper( ) e para padronizar.
+            strEscolha = input( "\n ta certo? ( Y/N ) " ).upper( )
+
+            if strEscolha == "N":
+                Utils.LimparConsole( )
+                break
+            elif strEscolha == "Y":
+                bPare = True
+                break
+            else:
+                print( "Opções invalida" )
+                continue
+        
+        if bPare:
+            break
+
+    # Repete a quantidade.
+    for i in range( iQuantidade ):
+        # Nesse loop depois de 3 livros iguais ele vira verde.
+        strRestricao = "Vermelho"
+
+        # Lembre sempre que aqui comeca do zero ta?
+        if i > 1:
+            strRestricao = "Verde"
+
+        # adiciona as informacoes a classe.
+        NovoLivro = BaseLivraria.Livro( strNomeDoLivro, strGenero, False, "-", "-", BaseLivraria.GerarCodigoUnico( lLivraria, 6 ), iIdadeMinima, strRestricao, iPrateleira )
+
+        # adiciona o livro a lista.
+        lLivraria.append( NovoLivro )
+
+def AdicionarLivroNaLivraria( ):
+    print( pf.figlet_format( "Adicionar livro" ) )
+
+    print( "Escolha qual operacao sera executada" )
+    print( "0 - Sair" )
+    print( "1 - Adicionar um livro" )
+    print( "2 - Adicionar multiplos livros" )
+
+    iEscolha = Utils.InputDeInteiro("")
+
+    match iEscolha:
+        case 0:
+            return
+        case 1:
+            AdicionarUmLivroNaLivraria( )
+        case 2:
+            AdicionarMultiplosLivrosNaLivraria( )
 
 def RemoverLivroNaLivraria( ):
     print( pf.figlet_format( "remover livro" ) )

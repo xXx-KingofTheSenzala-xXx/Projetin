@@ -101,3 +101,21 @@ def BusqueOArquivo( ):
     wxFileDialog.Destroy( )
 
     return strCaminhoDoArquivo
+
+def InputDeQuantidade( strEntrada: str = "" ):
+    # pre declaracao.
+    strSaida = 0
+
+    while True:
+        # Salve a escolha
+        strSaida = InputDeInteiro( strEntrada )
+
+        # Se o numero foi acima de 1 pare o loop atingimos nosso objetivo.
+        if strSaida > 1:
+            break
+        
+        # Para chegar aqui ele colocou um numero menor q 2.
+        print("Digite um numero acima de 1")
+
+    # Retorne o valor final.
+    return strSaida
