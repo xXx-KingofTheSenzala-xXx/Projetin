@@ -14,7 +14,7 @@ def LimparConsole( ):
     else:
         os.system("clear")
 
-def InputDeInteiro( strEntrada: str ):
+def InputDeInteiro( strEntrada: str = "" ):
     # Para que isso?, para eu poupar tempo lel.
     iValorDeRetorno = 0
 
