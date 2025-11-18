@@ -27,8 +27,8 @@ import colorama as cl
 import os
 
 # arquivos locais importados.
-import Utils
-import BaseLivraria
+from modules import Utils
+from modules import BaseLivraria
 
 ESTAGIOPADRAO = 0
 ESTAGIOMOSTRARSOMENTEEMPRESTAVEL = 1

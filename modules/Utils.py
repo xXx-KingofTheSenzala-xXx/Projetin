@@ -6,6 +6,7 @@ def LimparConsole( ):
     # Eu to no linux filho da puta cls nao limpa a porra do console caralho.
     # se o os.name retornar 'nt' quer dizer que voce ta no windows
     # caso retorne posix provavelmente voce esta num sistema baseado no linux.
+    # odeio a mariana.
 
     # Caso esteja no windows.
     if os.name == "nt":
