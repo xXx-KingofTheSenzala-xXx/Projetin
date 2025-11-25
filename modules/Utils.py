@@ -119,3 +119,6 @@ def InputDeQuantidade( strEntrada: str = "" ):
 
     # Retorne o valor final.
     return strSaida
+
+def CheckParaVerSeExisteEsseArquivo( strPath: str ):
+    return os.path.isfile( strPath )

@@ -423,6 +423,16 @@ def ConversaoDeDicionarioParaLista( Livraria: dict ):
 
         lLivraria.append( LivroAtual )
 
+def ApagueOArquivoExistente( strPath: str ):
+    if not Utils.CheckParaVerSeExisteEsseArquivo( strPath ):
+        return
+    
+    print( "Aparenta que esse arquivo ja é existente" )
+    print( "Sobrepondo!!!")
+
+    # Deleta essa porra.
+    os.remove( strPath )
+
 def ExportacaoParaExcel( ):
     # braia: ta essa funcao pode esta incompleta e mal feita
     # porem deve funcionar lel.
@@ -466,8 +476,11 @@ def ExportacaoParaExcel( ):
     # Conversao da lista livraria para pandas.
     dfEntrada = pd.DataFrame( dictLivraria )
 
+    # Deleta o ja existente para sobrepor.
+    ApagueOArquivoExistente( strDiretorioFinal )
+
     # Exporte isso.
-    dfEntrada.to_excel( strDiretorioFinal, index=False )
+    dfEntrada.to_excel( strDiretorioFinal, index=False, header=False )
 
     print( f"Arquivo excel gerado em: {strDiretorioFinal}" )
     input( "Aperte 'ENTER' para continuar" )
