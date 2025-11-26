@@ -8,17 +8,6 @@
 # variavel constante ou seja nao pode alterar o valor NOMEDAVARIAVEL
 # variavel bool ou seja nao pode alterar o valor bNomeDaVariavel
 
-# Para fazer;
-# braia: mano bora por essa porra pra exportar e importar a variavel Livraria.
-# bom hoje no dia 03/11/2025 tivemos um papo com nosso cliente.
-# sera necessario exportacao para um planilha excel.
-# restricoes de livros por idade.( feito )
-# restricoes para livros que nao possuem muitas unidades ex:
-# tem 15 livros iguais 3 deles nao podem ser retirados
-# ou tem so um exemplar logo ele nao pode ser emprestado. ( feito )
-# codigo para cada livro. ( feito )
-# por variavel de qual estante e. ( feito )
-
 # bibliotecas importadas
 import pandas as pd
 import pyfiglet as pf
@@ -513,6 +502,7 @@ def OperacoesEmExcel( ):
     # Cara sinceramente nao sei oq dizer.
 
     print( "O que voce deseja?" )
+    print( "0 - Sair" )
     print( "1 - Exportar" )
     print( "2 - Importar" )
 
@@ -521,6 +511,8 @@ def OperacoesEmExcel( ):
         iEscolha = Utils.InputDeInteiro( "" )
 
         match iEscolha:
+            case 0:
+                break
             case 1:
                 ExportacaoParaExcel( )
                 break
